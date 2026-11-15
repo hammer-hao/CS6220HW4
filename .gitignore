@@ -16,6 +16,7 @@ venv/
 .tmp/
 .scratch/
 wheels/
+_report_pass.pdf
 
 # OS / editor noise
 .DS_Store

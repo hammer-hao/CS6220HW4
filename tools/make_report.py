@@ -106,7 +106,16 @@ def esc(text):
 
 
 def P(text, style, **kwargs):
-    return Paragraph(text, style, **kwargs)
+    """Paragraph factory; ``qid`` tags the paragraph so its page can be recorded.
+
+    The tag is read back in Report.afterFlowable, which makes the answer locator
+    immune to a heading being pushed to the next page by keepWithNext.
+    """
+    qid = kwargs.pop("qid", None)
+    paragraph = Paragraph(text, style, **kwargs)
+    if qid:
+        paragraph._qid = qid
+    return paragraph
 
 
 def code_block(text, styles, width=6.75 * inch):
@@ -188,7 +197,10 @@ class Report(BaseDocTemplate):
         canvas.restoreState()
 
     def afterFlowable(self, flowable):
-        if isinstance(flowable, Marker):
+        qid = getattr(flowable, "_qid", None)
+        if qid:
+            self.page_map[qid] = self.page
+        elif isinstance(flowable, Marker):
             self.page_map[flowable.key] = self.page
 
 
@@ -267,8 +279,7 @@ def build_story(data, styles, page_map):
     story.append(Spacer(1, 10))
 
     # ---------------------------------------------------------------- Q1
-    story.append(Marker("q1"))
-    story.append(P("1. Repository and code organization (Q1)", styles["h1"]))
+    story.append(P("1. Repository and code organization (Q1)", styles["h1"], qid="q1"))
     story.append(P(
         "The complete source is at <b>%s</b>. The repository is self-contained: clone it, install "
         "the pinned dependencies, and execute the notebook." % esc(REPO), styles["body"]))
@@ -301,8 +312,7 @@ def build_story(data, styles, page_map):
         "to regenerate this PDF.", styles["body"]))
 
     # ---------------------------------------------------------------- Q2
-    story.append(Marker("q2"))
-    story.append(P("2. Pseudo-code for Apriori and Apriori_rules (Q2)", styles["h1"]))
+    story.append(P("2. Pseudo-code for Apriori and Apriori_rules (Q2)", styles["h1"], qid="q2"))
     story.append(P(
         "Both algorithms are the same level-wise loop over increasing sizes, differing only in "
         "what is being extended, how candidates are pruned, and how they are scored.", styles["body"]))
@@ -356,8 +366,7 @@ def build_story(data, styles, page_map):
         "chat link is to be inserted here by the author.", styles["body"]))
 
     # ---------------------------------------------------------------- Q3
-    story.append(Marker("q3"))
-    story.append(P("3. Frequent itemsets and pruning statistics (Q3)", styles["h1"]))
+    story.append(P("3. Frequent itemsets and pruning statistics (Q3)", styles["h1"], qid="q3"))
     story.append(P(
         "With 20 transactions, min_sup = 0.25 means an itemset must occur in at least 5 baskets. "
         "The table reports, per size k, how many candidates the join produced, how many the "
@@ -405,8 +414,7 @@ def build_story(data, styles, page_map):
         "items, a regime this database does not reach.", styles["body"]))
 
     # ---------------------------------------------------------------- Q4
-    story.append(Marker("q4"))
-    story.append(P("4. The 3-itemset {Butter, Bread, Eggs} (Q4)", styles["h1"]))
+    story.append(P("4. The 3-itemset {Butter, Bread, Eggs} (Q4)", styles["h1"], qid="q4"))
     singles = q4["singletons"]
     pairs = q4["pairs"]
     q4_rows = []
@@ -440,8 +448,7 @@ def build_story(data, styles, page_map):
         "3 of 20 baskets (0.15), so it would fail the support test anyway.", styles["body"]))
 
     # ---------------------------------------------------------------- Q5
-    story.append(Marker("q5"))
-    story.append(P("5. Association rules for min_conf = 0.6 (Q5)", styles["h1"]))
+    story.append(P("5. Association rules for min_conf = 0.6 (Q5)", styles["h1"], qid="q5"))
     story.append(P(
         "Apriori_rules returns the following 11 rules. Support is the support of the full "
         "itemset, confidence is sup(antecedent and consequent)/sup(antecedent), and lift is "
@@ -474,8 +481,7 @@ def build_story(data, styles, page_map):
         "unconfident superset - which the notebook reports explicitly.", styles["body"]))
 
     # ---------------------------------------------------------------- Q6
-    story.append(Marker("q6"))
-    story.append(P("6. What a lift below 1.0 means (Q6)", styles["h1"]))
+    story.append(P("6. What a lift below 1.0 means (Q6)", styles["h1"], qid="q6"))
     story.append(P(
         "Lift compares the observed co-occurrence of A and B with what independence predicts: "
         "lift(A -> B) = confidence(A -> B) / support(B) = support(A and B) / "
@@ -497,8 +503,7 @@ def build_story(data, styles, page_map):
         "average customer to want B.", styles["body"]))
 
     # ---------------------------------------------------------------- Q7
-    story.append(Marker("q7"))
-    story.append(P("7. Strongest and weakest rule (Q7)", styles["h1"]))
+    story.append(P("7. Strongest and weakest rule (Q7)", styles["h1"], qid="q7"))
     story.append(P(
         "<b>Strongest: {Bread, Milk} -> {Butter}</b> - support 0.25, confidence 1.000, lift 3.333. "
         "Every basket with Bread and Milk also contains Butter, the lift is the highest of all "
@@ -517,8 +522,7 @@ def build_story(data, styles, page_map):
         "lift near 1 is a rule that says nothing.", styles["body"]))
 
     # ---------------------------------------------------------------- Q8
-    story.append(Marker("q8"))
-    story.append(P("8. Pseudo-code for hierarchical clustering (Q8)", styles["h1"]))
+    story.append(P("8. Pseudo-code for hierarchical clustering (Q8)", styles["h1"], qid="q8"))
     story.append(code_block(
         "HAC(X, dist_fn)                     # dist_fn is min_dist or max_dist\n"
         "  D <- matrix of point-to-point distances        # the only O(n^2) point comparison\n"
@@ -549,8 +553,7 @@ def build_story(data, styles, page_map):
 
     # ---------------------------------------------------------------- Q9
     story.append(KeepTogether([
-        Marker("q9"),
-        P("9. The dataset and the number of natural clusters (Q9)", styles["h1"]),
+        P("9. The dataset and the number of natural clusters (Q9)", styles["h1"], qid="q9"),
         figure(fig_path("fig1_dataset.png"), width=5.6 * inch,
                caption="Figure 1 - the 370 points of clustering.txt. The groups are not "
                        "all round: four are elongated vertical strips, two are rings.",
@@ -582,8 +585,7 @@ def build_story(data, styles, page_map):
 
     # ---------------------------------------------------------------- Q10
     story.append(KeepTogether([
-        Marker("q10"),
-        P("10. HAC with min_dist: dendrogram and 13 clusters (Q10)", styles["h1"]),
+        P("10. HAC with min_dist: dendrogram and 13 clusters (Q10)", styles["h1"], qid="q10"),
         figure(fig_path("fig2_dendrogram_min.png"), width=6.6 * inch,
                caption="Figure 2 - single-linkage dendrogram. The dashed line is the cut "
                        "that yields 13 clusters (between merge heights 0.071 and 0.075).",
@@ -605,8 +607,7 @@ def build_story(data, styles, page_map):
 
     # ---------------------------------------------------------------- Q11
     story.append(KeepTogether([
-        Marker("q11"),
-        P("11. HAC with max_dist: dendrogram and 13 clusters (Q11)", styles["h1"]),
+        P("11. HAC with max_dist: dendrogram and 13 clusters (Q11)", styles["h1"], qid="q11"),
         figure(fig_path("fig4_dendrogram_max.png"), width=6.6 * inch,
                caption="Figure 4 - complete-linkage dendrogram with the same cut "
                        "(between merge heights 0.288 and 0.290).", styles=styles)]))
@@ -618,26 +619,28 @@ def build_story(data, styles, page_map):
         "produces 13 compact clusters, but not the 13 clusters that are in the data:"
         % ", ".join(str(s) for s in sizes_max), styles["body"]))
     story.append(P(
-        "The four vertical strips are cut horizontally into halves - e.g. the second strip "
-        "becomes x 0.17-0.26 / y 0.00-0.21 (32 points) and x 0.17-0.26 / y 0.21-0.35 (34 points). "
-        "The position of the cut is an artefact: a strip's diameter (0.35) exceeds the height at "
-        "which complete linkage will merge (0.29).", styles["bullet"], bulletText="\u2022"))
+        "The four vertical strips are cut horizontally: complete linkage never allows a "
+        "cluster taller than about 0.3, so every strip is split at roughly y = 0.2 - the second "
+        "strip survives only as x 0.17-0.26 / y 0.00-0.21 (32 points).", styles["bullet"],
+        bulletText="\u2022"))
     story.append(P(
-        "Halves of <i>different</i> strips are then merged: one cluster spans x 0.05-0.26 at "
+        "The pieces are regrouped <i>across</i> strips: one cluster spans x 0.05-0.26 at "
         "y 0.24-0.35 (the tops of strips 1 and 2, 34 points), another spans x 0.35-0.56 at "
-        "y 0.00-0.17 (the bottoms of strips 3 and 4, 42 points). Two visually separate groups "
-        "share a cluster while one group sits in two clusters.", styles["bullet"], bulletText="\u2022"))
+        "y 0.00-0.17 (the bottoms of strips 3 and 4, 42 points) and a third spans x 0.34-0.52 "
+        "at y 0.13-0.35 (their tops, 55 points). Two visually separate groups share a cluster "
+        "while one group sits in two clusters.", styles["bullet"], bulletText="\u2022"))
     story.append(P(
         "The big ring is broken into a left arc (13 points) and a top arc (19 points); the "
         "smaller ring survives intact (38 points) only because its diameter is smaller.",
         styles["bullet"], bulletText="\u2022"))
     story.append(P(
-        "Two upper blobs are merged into one 34-point cluster spanning x 0.19-0.44, y 0.65-0.83.",
+        "Two pairs of small blobs are glued together: the upper blobs at (0.19-0.28, 0.77-0.83) "
+        "and (0.38-0.44, 0.65-0.71) form one 34-point cluster, and the lower-right blobs at "
+        "(0.79-0.87, 0.27-0.31) and (0.92-1.04, 0.15-0.24) form one 30-point cluster.",
         styles["bullet"], bulletText="\u2022"))
 
     # ---------------------------------------------------------------- Q12
-    story.append(Marker("q12"))
-    story.append(P("12. Which clustering agrees more with intuition, and why (Q12)", styles["h1"]))
+    story.append(P("12. Which clustering agrees more with intuition, and why (Q12)", styles["h1"], qid="q12"))
     story.append(P(
         "<b>min_dist (single linkage) agrees much more with intuition on this dataset</b>, "
         "because the natural clusters are elongated or non-convex and single linkage is the only "
@@ -669,8 +672,7 @@ def build_story(data, styles, page_map):
         styles["body"]))
 
     # ---------------------------------------------------------------- appendix
-    story.append(Marker("appa"))
-    story.append(P("Appendix A - Reproducibility and verification", styles["h1"]))
+    story.append(P("Appendix A - Reproducibility and verification", styles["h1"], qid="appa"))
     story.append(P(
         "Every number and figure in this report is produced by CS6220_HW4.ipynb, which writes "
         "results/hw4_results.json and figures/*.png; tools/make_report.py only formats them. The "
@@ -689,18 +691,16 @@ def build_story(data, styles, page_map):
     story.append(P(
         "for both linkage rules, the 369 merge distances and the 13-cluster partition agree with "
         "scipy.cluster.hierarchy (single and complete linkage).", styles["bullet"], bulletText="\u2022"))
-    story.append(Spacer(1, 6))
-    story.append(P("Dependencies (requirements.txt)", styles["h2"]))
+    story.append(Spacer(1, 4))
+    story.append(P("Dependencies (pinned in requirements.txt)", styles["h2"]))
     dep_rows = [
-        ["numpy", "array arithmetic, distance matrix"],
-        ["scipy", "cross-check of the linkage matrices"],
-        ["matplotlib", "all figures"],
-        ["pandas", "tabular display in the notebook"],
+        ["numpy, scipy, matplotlib", "arrays, computation and every figure (SciPy also "
+                                     "cross-checks the linkage matrices)"],
+        ["pandas, ipykernel, nbformat, nbconvert", "notebook tables and notebook execution"],
         ["reportlab", "this PDF report"],
-        ["ipykernel / nbformat", "executing the notebook"],
     ]
     story.append(data_table(["package", "used for"], dep_rows,
-                            [1.7 * inch, 4.3 * inch], styles))
+                            [2.6 * inch, 3.9 * inch], styles))
 
     return story
 
@@ -716,13 +716,23 @@ def main():
     with open(RESULTS, encoding="utf-8") as fh:
         data = json.load(fh)
 
-    first = build(data, {})
-    second = build(data, first)
-    if second != first:
-        # page numbers moved (should not happen) - rebuild once more for stability
-        build(data, second)
+    # Build until the recorded page numbers stop moving, then write the final file.
+    # (A build to a scratch path is harmless: the PDF is regenerated below.)
+    scratch = os.path.join(ROOT, "_report_pass.pdf")
+    page_map = {}
+    for _ in range(4):
+        new_map = build(data, page_map, scratch)
+        if new_map == page_map:
+            break
+        page_map = new_map
+
+    final_map = build(data, page_map, OUT_PDF)
+    if os.path.exists(scratch):
+        os.remove(scratch)
+
     print("wrote", OUT_PDF)
-    print("pages:", max(second.values()))
+    print("answer pages:", {k: final_map[k] for k in sorted(final_map)})
+    print("total pages:", max(final_map.values()))
 
 
 if __name__ == "__main__":
