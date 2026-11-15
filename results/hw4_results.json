@@ -1,0 +1,1426 @@
+{
+  "meta": {
+    "seed": 6220,
+    "numpy": "2.5.4",
+    "matplotlib": "3.11.2",
+    "n_transactions": 20,
+    "n_items": 12,
+    "min_sup": 0.25,
+    "min_conf": 0.6,
+    "n_points": 370,
+    "target_clusters": 13
+  },
+  "item_support": {
+    "Apples": 0.2,
+    "Bananas": 0.2,
+    "Beer": 0.15,
+    "Bread": 0.4,
+    "Butter": 0.3,
+    "Cereal": 0.25,
+    "Chips": 0.1,
+    "Diapers": 0.15,
+    "Eggs": 0.3,
+    "Milk": 0.55,
+    "Salsa": 0.05,
+    "Yogurt": 0.15
+  },
+  "apriori": {
+    "levels": {
+      "1": {
+        "candidates": 12,
+        "pruned": 0,
+        "kept": 5,
+        "frequent": 5,
+        "itemsets": [
+          {
+            "itemset": [
+              "Milk"
+            ],
+            "support": 0.55
+          },
+          {
+            "itemset": [
+              "Bread"
+            ],
+            "support": 0.4
+          },
+          {
+            "itemset": [
+              "Butter"
+            ],
+            "support": 0.3
+          },
+          {
+            "itemset": [
+              "Eggs"
+            ],
+            "support": 0.3
+          },
+          {
+            "itemset": [
+              "Cereal"
+            ],
+            "support": 0.25
+          }
+        ],
+        "pruned_detail": []
+      },
+      "2": {
+        "candidates": 10,
+        "pruned": 0,
+        "kept": 10,
+        "frequent": 4,
+        "itemsets": [
+          {
+            "itemset": [
+              "Bread",
+              "Butter"
+            ],
+            "support": 0.3
+          },
+          {
+            "itemset": [
+              "Bread",
+              "Eggs"
+            ],
+            "support": 0.25
+          },
+          {
+            "itemset": [
+              "Bread",
+              "Milk"
+            ],
+            "support": 0.25
+          },
+          {
+            "itemset": [
+              "Butter",
+              "Milk"
+            ],
+            "support": 0.25
+          }
+        ],
+        "pruned_detail": []
+      },
+      "3": {
+        "candidates": 3,
+        "pruned": 2,
+        "kept": 1,
+        "frequent": 1,
+        "itemsets": [
+          {
+            "itemset": [
+              "Bread",
+              "Butter",
+              "Milk"
+            ],
+            "support": 0.25
+          }
+        ],
+        "pruned_detail": [
+          {
+            "candidate": [
+              "Bread",
+              "Butter",
+              "Eggs"
+            ],
+            "missing_subset": [
+              "Butter",
+              "Eggs"
+            ]
+          },
+          {
+            "candidate": [
+              "Bread",
+              "Eggs",
+              "Milk"
+            ],
+            "missing_subset": [
+              "Eggs",
+              "Milk"
+            ]
+          }
+        ]
+      },
+      "4": {
+        "candidates": 0,
+        "pruned": 0,
+        "kept": 0,
+        "frequent": 0,
+        "itemsets": [],
+        "pruned_detail": []
+      }
+    },
+    "total_frequent": 10
+  },
+  "q4": {
+    "singletons": {
+      "Bread": 0.4,
+      "Butter": 0.3,
+      "Eggs": 0.3
+    },
+    "pairs": {
+      "Bread & Butter": 0.3,
+      "Bread & Eggs": 0.25,
+      "Butter & Eggs": 0.15
+    },
+    "triple_support": 0.15,
+    "is_candidate": true,
+    "is_pruned": true,
+    "pruned_reason": [
+      "Butter",
+      "Eggs"
+    ],
+    "n_candidates_k3": 3
+  },
+  "rules": [
+    {
+      "antecedent": [
+        "Butter"
+      ],
+      "consequent": [
+        "Bread"
+      ],
+      "support": 0.3,
+      "confidence": 1.0,
+      "lift": 2.5,
+      "itemset": [
+        "Bread",
+        "Butter"
+      ]
+    },
+    {
+      "antecedent": [
+        "Bread"
+      ],
+      "consequent": [
+        "Butter"
+      ],
+      "support": 0.3,
+      "confidence": 0.7499999999999999,
+      "lift": 2.4999999999999996,
+      "itemset": [
+        "Bread",
+        "Butter"
+      ]
+    },
+    {
+      "antecedent": [
+        "Bread",
+        "Milk"
+      ],
+      "consequent": [
+        "Butter"
+      ],
+      "support": 0.25,
+      "confidence": 1.0,
+      "lift": 3.3333333333333335,
+      "itemset": [
+        "Bread",
+        "Butter",
+        "Milk"
+      ]
+    },
+    {
+      "antecedent": [
+        "Butter",
+        "Milk"
+      ],
+      "consequent": [
+        "Bread"
+      ],
+      "support": 0.25,
+      "confidence": 1.0,
+      "lift": 2.5,
+      "itemset": [
+        "Bread",
+        "Butter",
+        "Milk"
+      ]
+    },
+    {
+      "antecedent": [
+        "Butter"
+      ],
+      "consequent": [
+        "Bread",
+        "Milk"
+      ],
+      "support": 0.25,
+      "confidence": 0.8333333333333334,
+      "lift": 3.3333333333333335,
+      "itemset": [
+        "Bread",
+        "Butter",
+        "Milk"
+      ]
+    },
+    {
+      "antecedent": [
+        "Bread",
+        "Butter"
+      ],
+      "consequent": [
+        "Milk"
+      ],
+      "support": 0.25,
+      "confidence": 0.8333333333333334,
+      "lift": 1.5151515151515151,
+      "itemset": [
+        "Bread",
+        "Butter",
+        "Milk"
+      ]
+    },
+    {
+      "antecedent": [
+        "Bread"
+      ],
+      "consequent": [
+        "Butter",
+        "Milk"
+      ],
+      "support": 0.25,
+      "confidence": 0.625,
+      "lift": 2.5,
+      "itemset": [
+        "Bread",
+        "Butter",
+        "Milk"
+      ]
+    },
+    {
+      "antecedent": [
+        "Eggs"
+      ],
+      "consequent": [
+        "Bread"
+      ],
+      "support": 0.25,
+      "confidence": 0.8333333333333334,
+      "lift": 2.0833333333333335,
+      "itemset": [
+        "Bread",
+        "Eggs"
+      ]
+    },
+    {
+      "antecedent": [
+        "Bread"
+      ],
+      "consequent": [
+        "Eggs"
+      ],
+      "support": 0.25,
+      "confidence": 0.625,
+      "lift": 2.0833333333333335,
+      "itemset": [
+        "Bread",
+        "Eggs"
+      ]
+    },
+    {
+      "antecedent": [
+        "Bread"
+      ],
+      "consequent": [
+        "Milk"
+      ],
+      "support": 0.25,
+      "confidence": 0.625,
+      "lift": 1.1363636363636362,
+      "itemset": [
+        "Bread",
+        "Milk"
+      ]
+    },
+    {
+      "antecedent": [
+        "Butter"
+      ],
+      "consequent": [
+        "Milk"
+      ],
+      "support": 0.25,
+      "confidence": 0.8333333333333334,
+      "lift": 1.5151515151515151,
+      "itemset": [
+        "Butter",
+        "Milk"
+      ]
+    }
+  ],
+  "rules_pruning": [
+    {
+      "itemset": [
+        "Bread",
+        "Butter"
+      ],
+      "k": 2,
+      "candidates": 0,
+      "pruned": 0,
+      "pruned_detail": []
+    },
+    {
+      "itemset": [
+        "Bread",
+        "Eggs"
+      ],
+      "k": 2,
+      "candidates": 0,
+      "pruned": 0,
+      "pruned_detail": []
+    },
+    {
+      "itemset": [
+        "Bread",
+        "Milk"
+      ],
+      "k": 2,
+      "candidates": 0,
+      "pruned": 0,
+      "pruned_detail": []
+    },
+    {
+      "itemset": [
+        "Butter",
+        "Milk"
+      ],
+      "k": 2,
+      "candidates": 0,
+      "pruned": 0,
+      "pruned_detail": []
+    },
+    {
+      "itemset": [
+        "Bread",
+        "Butter",
+        "Milk"
+      ],
+      "k": 2,
+      "candidates": 3,
+      "pruned": 0,
+      "pruned_detail": []
+    },
+    {
+      "itemset": [
+        "Bread",
+        "Butter",
+        "Milk"
+      ],
+      "k": 3,
+      "candidates": 0,
+      "pruned": 0,
+      "pruned_detail": []
+    }
+  ],
+  "clustering": {
+    "min": {
+      "sizes": [
+        40,
+        60,
+        40,
+        60,
+        20,
+        10,
+        10,
+        10,
+        17,
+        17,
+        16,
+        35,
+        35
+      ],
+      "clusters": [
+        {
+          "cluster": 0,
+          "size": 40,
+          "centroid": [
+            0.0848,
+            0.1832
+          ]
+        },
+        {
+          "cluster": 1,
+          "size": 60,
+          "centroid": [
+            0.2146,
+            0.1893
+          ]
+        },
+        {
+          "cluster": 2,
+          "size": 40,
+          "centroid": [
+            0.5131,
+            0.1696
+          ]
+        },
+        {
+          "cluster": 3,
+          "size": 60,
+          "centroid": [
+            0.3829,
+            0.1841
+          ]
+        },
+        {
+          "cluster": 4,
+          "size": 20,
+          "centroid": [
+            0.9782,
+            0.1985
+          ]
+        },
+        {
+          "cluster": 5,
+          "size": 10,
+          "centroid": [
+            0.6781,
+            0.2732
+          ]
+        },
+        {
+          "cluster": 6,
+          "size": 10,
+          "centroid": [
+            0.826,
+            0.2925
+          ]
+        },
+        {
+          "cluster": 7,
+          "size": 10,
+          "centroid": [
+            0.7272,
+            0.0371
+          ]
+        },
+        {
+          "cluster": 8,
+          "size": 17,
+          "centroid": [
+            0.2308,
+            0.794
+          ]
+        },
+        {
+          "cluster": 9,
+          "size": 17,
+          "centroid": [
+            0.4146,
+            0.6865
+          ]
+        },
+        {
+          "cluster": 10,
+          "size": 16,
+          "centroid": [
+            0.1214,
+            0.5323
+          ]
+        },
+        {
+          "cluster": 11,
+          "size": 35,
+          "centroid": [
+            0.751,
+            0.8791
+          ]
+        },
+        {
+          "cluster": 12,
+          "size": 35,
+          "centroid": [
+            0.8897,
+            0.7256
+          ]
+        }
+      ],
+      "max_merge_distance": 0.24042524421111014,
+      "cut_range": [
+        0.07141445897249918,
+        0.07531030169215115
+      ],
+      "labels": [
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3,
+        3,
+        2,
+        2,
+        3,
+        3,
+        3,
+        2,
+        2,
+        3,
+        3,
+        3,
+        2,
+        2,
+        3,
+        3,
+        3,
+        2,
+        2,
+        3,
+        3,
+        3,
+        2,
+        2,
+        3,
+        3,
+        3,
+        2,
+        2,
+        3,
+        3,
+        3,
+        2,
+        2,
+        3,
+        3,
+        3,
+        2,
+        2,
+        3,
+        3,
+        3,
+        2,
+        2,
+        3,
+        3,
+        3,
+        2,
+        2,
+        3,
+        3,
+        3,
+        2,
+        2,
+        3,
+        3,
+        3,
+        2,
+        2,
+        3,
+        3,
+        3,
+        2,
+        2,
+        3,
+        3,
+        3,
+        2,
+        2,
+        3,
+        3,
+        3,
+        2,
+        2,
+        3,
+        3,
+        3,
+        2,
+        2,
+        3,
+        3,
+        3,
+        2,
+        2,
+        3,
+        3,
+        3,
+        2,
+        2,
+        3,
+        3,
+        3,
+        2,
+        2,
+        3,
+        3,
+        3,
+        4,
+        4,
+        5,
+        5,
+        6,
+        6,
+        6,
+        4,
+        7,
+        4,
+        4,
+        7,
+        5,
+        6,
+        5,
+        4,
+        7,
+        7,
+        5,
+        4,
+        6,
+        7,
+        4,
+        7,
+        4,
+        5,
+        6,
+        4,
+        6,
+        7,
+        4,
+        7,
+        4,
+        4,
+        6,
+        5,
+        5,
+        4,
+        7,
+        7,
+        4,
+        4,
+        4,
+        5,
+        6,
+        6,
+        5,
+        4,
+        4,
+        4,
+        8,
+        8,
+        9,
+        10,
+        8,
+        8,
+        8,
+        8,
+        9,
+        10,
+        9,
+        9,
+        9,
+        8,
+        9,
+        8,
+        10,
+        10,
+        9,
+        8,
+        9,
+        10,
+        8,
+        10,
+        8,
+        10,
+        8,
+        9,
+        10,
+        9,
+        10,
+        9,
+        9,
+        8,
+        9,
+        10,
+        10,
+        9,
+        9,
+        10,
+        10,
+        8,
+        10,
+        8,
+        8,
+        10,
+        8,
+        10,
+        9,
+        9,
+        11,
+        11,
+        12,
+        11,
+        12,
+        11,
+        11,
+        11,
+        12,
+        11,
+        11,
+        11,
+        12,
+        11,
+        12,
+        11,
+        12,
+        12,
+        12,
+        12,
+        11,
+        11,
+        12,
+        11,
+        11,
+        12,
+        12,
+        12,
+        12,
+        11,
+        12,
+        12,
+        11,
+        12,
+        11,
+        12,
+        11,
+        11,
+        11,
+        12,
+        11,
+        12,
+        12,
+        12,
+        12,
+        11,
+        11,
+        12,
+        11,
+        12,
+        11,
+        12,
+        12,
+        11,
+        11,
+        12,
+        12,
+        12,
+        11,
+        12,
+        12,
+        11,
+        12,
+        11,
+        11,
+        11,
+        11,
+        12,
+        11,
+        12
+      ]
+    },
+    "max": {
+      "sizes": [
+        34,
+        34,
+        32,
+        42,
+        13,
+        55,
+        30,
+        10,
+        34,
+        16,
+        13,
+        38,
+        19
+      ],
+      "clusters": [
+        {
+          "cluster": 0,
+          "size": 34,
+          "centroid": [
+            0.088,
+            0.1605
+          ]
+        },
+        {
+          "cluster": 1,
+          "size": 34,
+          "centroid": [
+            0.1836,
+            0.3171
+          ]
+        },
+        {
+          "cluster": 2,
+          "size": 32,
+          "centroid": [
+            0.2199,
+            0.0765
+          ]
+        },
+        {
+          "cluster": 3,
+          "size": 42,
+          "centroid": [
+            0.4431,
+            0.0712
+          ]
+        },
+        {
+          "cluster": 4,
+          "size": 13,
+          "centroid": [
+            0.6473,
+            0.2869
+          ]
+        },
+        {
+          "cluster": 5,
+          "size": 55,
+          "centroid": [
+            0.4228,
+            0.2516
+          ]
+        },
+        {
+          "cluster": 6,
+          "size": 30,
+          "centroid": [
+            0.9275,
+            0.2298
+          ]
+        },
+        {
+          "cluster": 7,
+          "size": 10,
+          "centroid": [
+            0.7272,
+            0.0371
+          ]
+        },
+        {
+          "cluster": 8,
+          "size": 34,
+          "centroid": [
+            0.3227,
+            0.7403
+          ]
+        },
+        {
+          "cluster": 9,
+          "size": 16,
+          "centroid": [
+            0.1214,
+            0.5323
+          ]
+        },
+        {
+          "cluster": 10,
+          "size": 13,
+          "centroid": [
+            0.6383,
+            0.8517
+          ]
+        },
+        {
+          "cluster": 11,
+          "size": 38,
+          "centroid": [
+            0.9,
+            0.7274
+          ]
+        },
+        {
+          "cluster": 12,
+          "size": 19,
+          "centroid": [
+            0.7856,
+            0.9185
+          ]
+        }
+      ],
+      "max_merge_distance": 1.2858248923341546,
+      "cut_range": [
+        0.28769366469029356,
+        0.2901701749661787
+      ],
+      "labels": [
+        0,
+        0,
+        1,
+        2,
+        1,
+        0,
+        1,
+        1,
+        2,
+        2,
+        0,
+        0,
+        1,
+        2,
+        2,
+        0,
+        1,
+        1,
+        2,
+        1,
+        0,
+        1,
+        1,
+        2,
+        1,
+        0,
+        0,
+        1,
+        2,
+        2,
+        0,
+        0,
+        1,
+        2,
+        2,
+        0,
+        0,
+        1,
+        2,
+        2,
+        0,
+        0,
+        1,
+        2,
+        2,
+        0,
+        1,
+        1,
+        2,
+        1,
+        0,
+        0,
+        1,
+        2,
+        2,
+        0,
+        0,
+        1,
+        2,
+        2,
+        0,
+        0,
+        1,
+        2,
+        2,
+        0,
+        0,
+        1,
+        2,
+        2,
+        0,
+        0,
+        1,
+        2,
+        1,
+        0,
+        1,
+        1,
+        2,
+        1,
+        0,
+        0,
+        1,
+        2,
+        1,
+        0,
+        0,
+        1,
+        2,
+        2,
+        0,
+        1,
+        1,
+        2,
+        2,
+        0,
+        0,
+        1,
+        2,
+        1,
+        3,
+        4,
+        5,
+        3,
+        3,
+        5,
+        5,
+        5,
+        3,
+        5,
+        5,
+        3,
+        5,
+        3,
+        5,
+        5,
+        3,
+        5,
+        3,
+        5,
+        5,
+        4,
+        5,
+        3,
+        5,
+        5,
+        3,
+        5,
+        3,
+        5,
+        5,
+        3,
+        5,
+        3,
+        5,
+        5,
+        3,
+        5,
+        3,
+        5,
+        5,
+        3,
+        5,
+        3,
+        5,
+        5,
+        4,
+        5,
+        3,
+        3,
+        3,
+        3,
+        5,
+        3,
+        5,
+        5,
+        3,
+        5,
+        3,
+        5,
+        5,
+        3,
+        5,
+        3,
+        5,
+        5,
+        5,
+        5,
+        3,
+        5,
+        3,
+        3,
+        5,
+        3,
+        3,
+        5,
+        3,
+        5,
+        3,
+        5,
+        5,
+        3,
+        5,
+        3,
+        5,
+        5,
+        3,
+        5,
+        3,
+        3,
+        5,
+        5,
+        5,
+        3,
+        5,
+        5,
+        3,
+        5,
+        3,
+        3,
+        6,
+        6,
+        4,
+        4,
+        6,
+        6,
+        6,
+        6,
+        7,
+        6,
+        6,
+        7,
+        4,
+        6,
+        4,
+        6,
+        7,
+        7,
+        4,
+        6,
+        6,
+        7,
+        6,
+        7,
+        6,
+        4,
+        6,
+        6,
+        6,
+        7,
+        6,
+        7,
+        6,
+        6,
+        6,
+        4,
+        4,
+        6,
+        7,
+        7,
+        6,
+        6,
+        6,
+        4,
+        6,
+        6,
+        4,
+        6,
+        6,
+        6,
+        8,
+        8,
+        8,
+        9,
+        8,
+        8,
+        8,
+        8,
+        8,
+        9,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        9,
+        9,
+        8,
+        8,
+        8,
+        9,
+        8,
+        9,
+        8,
+        9,
+        8,
+        8,
+        9,
+        8,
+        9,
+        8,
+        8,
+        8,
+        8,
+        9,
+        9,
+        8,
+        8,
+        9,
+        9,
+        8,
+        9,
+        8,
+        8,
+        9,
+        8,
+        9,
+        8,
+        8,
+        10,
+        11,
+        11,
+        11,
+        11,
+        12,
+        12,
+        10,
+        11,
+        12,
+        10,
+        12,
+        11,
+        11,
+        11,
+        10,
+        11,
+        12,
+        11,
+        11,
+        12,
+        10,
+        11,
+        10,
+        12,
+        11,
+        11,
+        11,
+        11,
+        12,
+        11,
+        11,
+        10,
+        11,
+        12,
+        11,
+        11,
+        12,
+        12,
+        11,
+        12,
+        12,
+        11,
+        11,
+        11,
+        12,
+        10,
+        11,
+        10,
+        11,
+        10,
+        11,
+        11,
+        12,
+        10,
+        11,
+        11,
+        12,
+        10,
+        11,
+        11,
+        11,
+        11,
+        12,
+        11,
+        10,
+        12,
+        11,
+        12,
+        11
+      ]
+    }
+  },
+  "figures": {
+    "fig1_dataset.png": "figures\\fig1_dataset.png",
+    "fig2_dendrogram_min.png": "figures\\fig2_dendrogram_min.png",
+    "fig3_clusters_min.png": "figures\\fig3_clusters_min.png",
+    "fig4_dendrogram_max.png": "figures\\fig4_dendrogram_max.png",
+    "fig5_clusters_max.png": "figures\\fig5_clusters_max.png"
+  }
+}

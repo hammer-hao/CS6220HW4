@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Notebook checkpoints
+.ipynb_checkpoints/
+
+# Local virtual environments / package installs
+.venv/
+.pyenv/
+venv/
+
+# Scratch space used while building the deliverables
+.tmp/
+.scratch/
+wheels/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+~$*
