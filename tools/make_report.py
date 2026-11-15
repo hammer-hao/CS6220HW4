@@ -5,9 +5,15 @@ executed notebook.  Usage:
 
     python tools/make_report.py
 
-The document is built twice: the first pass records on which page each question's
-heading landed, the second pass prints those page numbers in the answer locator on
-page 2 (which is what Gradescope asks for).
+The report is generated, not hand-written, so every number in it comes from the
+executed notebook.  Usage:
+
+    python tools/make_report.py
+
+Layout is deliberately plain: no header, no footer, and a compact title block at the
+top of page 1 instead of a separate cover page. The document is rebuilt until the
+recorded page numbers stop moving, because the answer locator on page 1 has to print
+the page on which each question actually starts.
 """
 
 import json
@@ -25,7 +31,6 @@ from reportlab.platypus import (
     Frame,
     Image,
     KeepTogether,
-    PageBreak,
     PageTemplate,
     Paragraph,
     Preformatted,
@@ -44,9 +49,10 @@ COURSE = "CS 6220 - Data Mining Techniques"
 TITLE = "Homework 4: Frequent Itemsets, Association Rules, and Hierarchical Clustering"
 REPO = "https://github.com/hammer-hao/CS6220HW4"
 
-ACCENT = colors.HexColor("#1f3d5c")
-LIGHT = colors.HexColor("#eef2f6")
-GRID = colors.HexColor("#b9c4cf")
+ACCENT = colors.HexColor("#000000")
+LIGHT = colors.HexColor("#f4f4f4")
+GRID = colors.HexColor("#bbbbbb")
+INK = colors.HexColor("#222222")
 DATE = "November 14, 2026"
 
 
@@ -55,31 +61,31 @@ def make_styles():
     styles = getSampleStyleSheet()
     body = ParagraphStyle(
         "Body4", parent=styles["BodyText"], fontName="Helvetica", fontSize=9.6,
-        leading=13.4, alignment=TA_JUSTIFY, spaceAfter=6,
+        leading=13.4, alignment=TA_JUSTIFY, spaceAfter=6, textColor=INK,
     )
     return {
-        "title": ParagraphStyle("T", parent=body, fontName="Helvetica-Bold", fontSize=19,
-                                leading=23, textColor=ACCENT, alignment=TA_CENTER, spaceAfter=10),
-        "subtitle": ParagraphStyle("ST", parent=body, fontSize=12, leading=16,
-                                   textColor=colors.HexColor("#41576d"), alignment=TA_CENTER),
-        "meta": ParagraphStyle("M", parent=body, fontSize=9.5, leading=13,
-                               alignment=TA_CENTER, textColor=colors.HexColor("#41576d")),
-        "h1": ParagraphStyle("H1", parent=body, fontName="Helvetica-Bold", fontSize=13.5,
-                             leading=17, textColor=ACCENT, spaceBefore=12, spaceAfter=6,
+        "title": ParagraphStyle("T", parent=body, fontName="Helvetica-Bold", fontSize=15,
+                                leading=19, textColor=INK, alignment=TA_CENTER, spaceAfter=6),
+        "subtitle": ParagraphStyle("ST", parent=body, fontSize=10.5, leading=14,
+                                   textColor=INK, alignment=TA_CENTER),
+        "meta": ParagraphStyle("M", parent=body, fontSize=9.2, leading=13,
+                               alignment=TA_CENTER, textColor=INK),
+        "h1": ParagraphStyle("H1", parent=body, fontName="Helvetica-Bold", fontSize=12.5,
+                             leading=16, textColor=INK, spaceBefore=11, spaceAfter=5,
                              alignment=0, keepWithNext=1),
-        "h2": ParagraphStyle("H2", parent=body, fontName="Helvetica-Bold", fontSize=10.6,
-                             leading=14, textColor=colors.HexColor("#2b5378"),
-                             spaceBefore=9, spaceAfter=4, keepWithNext=1),
+        "h2": ParagraphStyle("H2", parent=body, fontName="Helvetica-Bold", fontSize=10.2,
+                             leading=13.5, textColor=INK,
+                             spaceBefore=8, spaceAfter=3, keepWithNext=1),
         "body": body,
         "bullet": ParagraphStyle("B", parent=body, leftIndent=13, bulletIndent=3, spaceAfter=3),
         "cell": ParagraphStyle("C", parent=body, fontSize=8.1, leading=10.2, alignment=0,
                                spaceAfter=0),
-        "cellb": ParagraphStyle("CB", parent=body, fontName="Helvetica-Bold", fontSize=8.3,
-                                leading=10.4, textColor=colors.white, alignment=0, spaceAfter=0),
+        "cellb": ParagraphStyle("CB", parent=body, fontName="Helvetica-Bold", fontSize=8.2,
+                                leading=10.4, textColor=INK, alignment=0, spaceAfter=0),
         "code": ParagraphStyle("Code", parent=body, fontName="Courier", fontSize=7.6,
                                leading=9.4, alignment=0),
-        "caption": ParagraphStyle("Cap", parent=body, fontSize=8.2, leading=10.6,
-                                  textColor=colors.HexColor("#41576d"), alignment=TA_CENTER,
+        "caption": ParagraphStyle("Cap", parent=body, fontName="Helvetica-Oblique", fontSize=8.2,
+                                  leading=10.6, textColor=INK, alignment=TA_CENTER,
                                   spaceBefore=2, spaceAfter=10),
     }
 
@@ -134,7 +140,7 @@ def code_block(text, styles, width=6.75 * inch):
 
 
 def data_table(header, rows, col_widths, styles, align_right=None):
-    """Table with a dark header row and wrapped paragraph cells."""
+    """Table with a plain ruled header row and wrapped paragraph cells."""
     align_right = align_right or []
     head = [P(esc(h), styles["cellb"]) for h in header]
     body = []
@@ -149,10 +155,10 @@ def data_table(header, rows, col_widths, styles, align_right=None):
         body.append(cells)
     table = Table([head] + body, colWidths=col_widths, repeatRows=1, hAlign="CENTER")
     table.setStyle(TableStyle([
-        ("BACKGROUND", (0, 0), (-1, 0), ACCENT),
-        ("GRID", (0, 0), (-1, -1), 0.3, GRID),
+        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#e8e8e8")),
+        ("LINEBELOW", (0, 0), (-1, 0), 0.6, colors.HexColor("#888888")),
+        ("GRID", (0, 0), (-1, -1), 0.25, GRID),
         ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-        ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#f6f8fa")]),
         ("LEFTPADDING", (0, 0), (-1, -1), 4),
         ("RIGHTPADDING", (0, 0), (-1, -1), 4),
         ("TOPPADDING", (0, 0), (-1, -1), 2.5),
@@ -176,25 +182,14 @@ class Report(BaseDocTemplate):
     def __init__(self, filename, page_map, **kwargs):
         BaseDocTemplate.__init__(
             self, filename, pagesize=letter,
-            leftMargin=0.82 * inch, rightMargin=0.82 * inch,
-            topMargin=0.72 * inch, bottomMargin=0.72 * inch,
+            leftMargin=0.85 * inch, rightMargin=0.85 * inch,
+            topMargin=0.85 * inch, bottomMargin=0.8 * inch,
             title="CS 6220 Homework 4", author=AUTHOR, **kwargs)
         self.page_map = page_map
         frame = Frame(self.leftMargin, self.bottomMargin, self.width, self.height,
                       id="body", leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0)
-        self.addPageTemplates([PageTemplate(id="main", frames=[frame], onPage=self.decorate)])
-
-    def decorate(self, canvas, doc):
-        canvas.saveState()
-        canvas.setFont("Helvetica", 7.8)
-        canvas.setFillColor(colors.HexColor("#6b7c8c"))
-        canvas.drawString(self.leftMargin, 0.5 * inch,
-                          "CS 6220 - Homework 4 - Frequent Itemsets, Association Rules, HAC")
-        canvas.drawRightString(letter[0] - self.rightMargin, 0.5 * inch, "page %d" % doc.page)
-        canvas.setStrokeColor(GRID)
-        canvas.setLineWidth(0.4)
-        canvas.line(self.leftMargin, 0.62 * inch, letter[0] - self.rightMargin, 0.62 * inch)
-        canvas.restoreState()
+        # No header, no footer: the page carries nothing but the content.
+        self.addPageTemplates([PageTemplate(id="main", frames=[frame])])
 
     def afterFlowable(self, flowable):
         qid = getattr(flowable, "_qid", None)
@@ -222,17 +217,17 @@ def build_story(data, styles, page_map):
         return str(page_map.get(key, default))
 
     # ---------------------------------------------------------------- title page
-    story.append(Spacer(1, 1.5 * inch))
+    # ------------------------------------------------------- title block (page 1)
+    # A compact heading instead of a separate cover page: title, one-line metadata,
+    # the abstract, and then straight into the contents table.
+    story.append(Spacer(1, 0.15 * inch))
     story.append(P(TITLE, styles["title"]))
-    story.append(Spacer(1, 10))
-    story.append(P(COURSE, styles["subtitle"]))
-    story.append(Spacer(1, 8))
-    story.append(P("Submitted %s" % esc(DATE), styles["meta"]))
-    story.append(Spacer(1, 34))
-    story.append(P("Author: <b>%s</b>" % esc(AUTHOR), styles["meta"]))
-    story.append(P("Repository: %s" % esc(REPO), styles["meta"]))
-    story.append(P("Notebook: CS6220_HW4.ipynb (all cells executed)", styles["meta"]))
-    story.append(Spacer(1, 34))
+    story.append(Spacer(1, 4))
+    story.append(P("%s &nbsp;&middot;&nbsp; %s" % (esc(COURSE), esc(DATE)), styles["subtitle"]))
+    story.append(Spacer(1, 2))
+    story.append(P("%s &nbsp;&middot;&nbsp; %s &nbsp;&middot;&nbsp; CS6220_HW4.ipynb"
+                   % (esc(AUTHOR), esc(REPO)), styles["meta"]))
+    story.append(Spacer(1, 14))
     story.append(P(
         "This report documents a from-scratch implementation of the Apriori algorithm, of an "
         "Apriori-based association-rule miner that exploits the anti-monotonicity of confidence, "
@@ -242,14 +237,14 @@ def build_story(data, styles, page_map):
         "min_sup = 0.25, Part 2 extracts association rules at min_conf = 0.6 and discusses "
         "support, confidence and lift, and Part 3 clusters the 370 points of clustering.txt, "
         "comparing single-linkage and complete-linkage dendrograms at 13 clusters.", styles["body"]))
-    story.append(PageBreak())
+    story.append(Spacer(1, 6))
 
     # ---------------------------------------------------------------- locator
     story.append(P("Contents and answer locator", styles["h1"]))
     story.append(P(
         "Gradescope requires the page on which each answer starts; the table below gives it "
         "directly. Section numbers match the question numbers.", styles["body"]))
-    story.append(Spacer(1, 4))
+    story.append(Spacer(1, 3))
 
     locator_rows = [
         ["Q1", "GitHub repository and code organization", page("q1")],
@@ -554,7 +549,7 @@ def build_story(data, styles, page_map):
     # ---------------------------------------------------------------- Q9
     story.append(KeepTogether([
         P("9. The dataset and the number of natural clusters (Q9)", styles["h1"], qid="q9"),
-        figure(fig_path("fig1_dataset.png"), width=5.6 * inch,
+        figure(fig_path("fig1_dataset.png"), width=5.2 * inch,
                caption="Figure 1 - the 370 points of clustering.txt. The groups are not "
                        "all round: four are elongated vertical strips, two are rings.",
                styles=styles)]))
@@ -586,11 +581,11 @@ def build_story(data, styles, page_map):
     # ---------------------------------------------------------------- Q10
     story.append(KeepTogether([
         P("10. HAC with min_dist: dendrogram and 13 clusters (Q10)", styles["h1"], qid="q10"),
-        figure(fig_path("fig2_dendrogram_min.png"), width=6.6 * inch,
+        figure(fig_path("fig2_dendrogram_min.png"), width=6.3 * inch,
                caption="Figure 2 - single-linkage dendrogram. The dashed line is the cut "
                        "that yields 13 clusters (between merge heights 0.071 and 0.075).",
                styles=styles)]))
-    story.append(figure(fig_path("fig3_clusters_min.png"), width=5.3 * inch,
+    story.append(figure(fig_path("fig3_clusters_min.png"), width=4.9 * inch,
                         caption="Figure 3 - the same 13 clusters drawn in the plane.", styles=styles))
     sizes_min = sorted(clustering["min"]["sizes"], reverse=True)
     story.append(P(
@@ -608,10 +603,10 @@ def build_story(data, styles, page_map):
     # ---------------------------------------------------------------- Q11
     story.append(KeepTogether([
         P("11. HAC with max_dist: dendrogram and 13 clusters (Q11)", styles["h1"], qid="q11"),
-        figure(fig_path("fig4_dendrogram_max.png"), width=6.6 * inch,
+        figure(fig_path("fig4_dendrogram_max.png"), width=6.3 * inch,
                caption="Figure 4 - complete-linkage dendrogram with the same cut "
                        "(between merge heights 0.288 and 0.290).", styles=styles)]))
-    story.append(figure(fig_path("fig5_clusters_max.png"), width=5.3 * inch,
+    story.append(figure(fig_path("fig5_clusters_max.png"), width=4.9 * inch,
                         caption="Figure 5 - the 13 complete-linkage clusters.", styles=styles))
     sizes_max = sorted(clustering["max"]["sizes"], reverse=True)
     story.append(P(
